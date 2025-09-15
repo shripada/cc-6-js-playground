@@ -1,7 +1,7 @@
 import assert from 'assert';
 
 // const assert = (predicate: boolean, message: string): void => {
-//   // if the condition holds, dont do anything,
+//   // if the condition holds, don't do anything,
 //   // else cry foul, or SHOUT with message passed and halt the execution!!
 //   if (!predicate) {
 //     // console.warn(message);
@@ -88,7 +88,7 @@ const getPrimesInRange = (start: number, end: number): number[] => {
   }
 
   return result;
-  // return range(start, end).filter((num) => isPrime(num));
+  // return range(start, end).filter((num) => isPrime(num)); << pure functional approach
 };
 
 assert.deepEqual(
@@ -96,3 +96,10 @@ assert.deepEqual(
   [2, 3, 5],
   'In range(0,5), we expect [2, 3, 5'
 );
+
+// TODO: Implement function that returns palindromes in a given array of strings
+function palindromesInStrings(strings: string[]): string[] {
+  // your implementation.
+}
+
+// TODO: your tests.
