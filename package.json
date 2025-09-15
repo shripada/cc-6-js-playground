@@ -1,0 +1,12 @@
+{
+  "name": "js-playground",
+  "module": "index.ts",
+  "type": "module",
+  "devDependencies": {
+    "@types/bun": "latest",
+    "assert": "^2.1.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5.9.2"
+  }
+}
