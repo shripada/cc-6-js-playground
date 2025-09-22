@@ -8,5 +8,9 @@
   },
   "peerDependencies": {
     "typescript": "^5.9.2"
+  },
+  "scripts": {
+    "type-check": "tsc ./2.js-prototypal.ts --noEmit",
+    "functions": "bun --watch ./functions.ts "
   }
 }

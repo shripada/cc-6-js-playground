@@ -100,6 +100,7 @@ assert.deepEqual(
 // TODO: Implement function that returns palindromes in a given array of strings
 function palindromesInStrings(strings: string[]): string[] {
   // your implementation.
+  return [];
 }
 
 // TODO: your tests.
