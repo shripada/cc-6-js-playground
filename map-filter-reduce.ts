@@ -86,7 +86,11 @@ assert.deepEqual(fullNames, ['John AppleSeed', 'Ram Rao']);
 // DRY principle needs to be followed by abstracting out the above logic into a reusable
 // function.
 
-Array.prototype.map = function (
+interface Array<T> {
+  map1(transform: (item: any, index: number, array: any[]) => any): any[];
+}
+
+Array.prototype.map1 = function (
   transform: (item: any, index: number, array: any[]) => any
 ) {
   console.log('our version of map');
@@ -97,6 +101,9 @@ Array.prototype.map = function (
   return result;
 };
 
+// 2. exercise. Implement a generic version of map
+// function map(array: T[], transform) ==> resultant array U
+
 interface Student {
   first: string;
   last: string;
@@ -104,8 +111,142 @@ interface Student {
 console.log(
   // from how things are done => what is done
   // This is functional style and is preferred.
-  students.map(
+  students.map1(
     (student: Student, index: number, array: Student[]) =>
       `${index + 1} of ${array.length}. ${student.first} ${student.last}`
   )
 );
+
+console.log(
+  // from how things are done => what is done
+  // This is functional style and is preferred.
+  students
+    .map(
+      (student: Student, index: number, array: Student[]) =>
+        `${index + 1} of ${array.length}. ${student.first} ${student.last}`
+    )
+    .map((st: string) => st.length)
+  // Declarative style. Here focus is on What is being done, than how it is done.
+);
+
+// Functors - any data structure that has a map method implmented, that can transform the data structure
+// into same kind.   Array supports map, and performing map on top of an array, produces another array.
+
+const someNums = [1, 4, 6, 3, 9, 11, 2, 23];
+// filter certain items from an array.
+// there will be a predicate to decide how do we filter
+// predicate is a boolean expression that is operated on an item, and
+// then if this returns true, item will be in result, otherwise it will be discarded
+// in the result. Result will be an array.
+// Type of original array  === type of result array
+// length(original array) >=  length(result array)?
+
+// We want only odd numbers
+const filtered: number[] = [];
+for (let i = 0; i < someNums.length; i++) {
+  // predicate?
+  const isOdd = (num: number, index: number, array: number[]) => num % 2 !== 0;
+
+  if (isOdd(someNums[i], i, someNums)) {
+    filtered.push(someNums[i]);
+  }
+}
+
+assert.deepEqual(filtered, [1, 3, 9, 11, 23]);
+
+Array.prototype.filter1 = function (predicate: (item: any) => boolean) {
+  const filtered: any[] = [];
+  for (let i = 0; i < someNums.length; i++) {
+    if (predicate(someNums[i])) {
+      filtered.push(someNums[i]);
+    }
+  }
+  return filtered;
+};
+
+console.log(someNums.filter1((num: number) => num % 2 !== 0));
+console.log(someNums.filter((num: number) => num % 2 !== 0));
+
+// we want to get squares of all odd number in someNums
+console.log(
+  someNums
+    .filter((num: number) => num % 2 !== 0)
+    .map((n) => n * n)
+    .filter((n) => n < 100)
+);
+
+// Finding sum of numbers
+const initialValue = 0;
+let accumulated = initialValue;
+
+for (let i = 0; i < someNums.length; i++) {
+  const current = someNums[i];
+  const reducer = (accumulated: number, current: number) =>
+    accumulated + current;
+  accumulated = reducer(accumulated, current);
+} // fold, or reduce will compute a single value by iterating through items of array
+
+assert.equal(accumulated, 59);
+
+const names = ['bangalore', 'mangalore', 'Chennai', 'hyderabad'];
+
+// Get a string which looks like this: ::bangalore->mangalore->chennai>hyderabad
+const initialVal = '';
+let accumulatedStr = initialVal;
+
+for (let i = 0; i < names.length; i++) {
+  const current = names[i];
+  const reducer = (
+    accumulated: string,
+    current: string,
+    index: number,
+    array: string[]
+  ) => {
+    return (
+      accumulated +
+      (index > 0 ? '->' : '') +
+      current +
+      (index === array.length - 1 ? '-]' : '')
+    );
+  };
+  accumulatedStr = reducer(accumulatedStr, current, i, names);
+} // fold, or reduce will compute a single value by iterating through items of array
+
+assert.equal(accumulatedStr, 'bangalore->mangalore->Chennai->hyderabad-]');
+
+type ReducerType = (
+  accumulated: any,
+  current: any,
+  index: number,
+  array: any[]
+) => any;
+
+Array.prototype.reduce1 = function (
+  reducer: ReducerType,
+  initialValue: any
+): any {
+  let accumulated = initialValue;
+
+  for (let i = 0; i < this.length; i++) {
+    accumulated = reducer(accumulated, this[i], i, this);
+  }
+
+  return accumulated;
+};
+
+const reducer = (
+  accumulated: string,
+  current: string,
+  index: number,
+  array: string[]
+) => {
+  return (
+    accumulated +
+    (index > 0 ? '->' : '') +
+    current +
+    (index === array.length - 1 ? '-]' : '')
+  );
+};
+
+console.log(names.reduce1(reducer, ''));
+console.log(names.reduce(reducer, ''));
