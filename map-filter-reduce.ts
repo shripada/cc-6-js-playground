@@ -250,3 +250,94 @@ const reducer = (
 
 console.log(names.reduce1(reducer, ''));
 console.log(names.reduce(reducer, ''));
+
+// A custom map implementation
+// ts is a strongly typed system
+// we need to ensure algorithms to work on any type
+// map, filter, reduce.
+const map = <T, U>(array: T[], transform: (item: T) => U): U[] => {
+  const result: U[] = [];
+  for (let i = 0; i < array.length; i++) {
+    result.push(transform(array[i]));
+  }
+  return result;
+};
+
+const nums_ = [1, 2, 3, 4, 5];
+
+const sqaures_ = map(nums_, (item) => `${item} * ${item}`);
+
+function mapNums(array: number[], transform: (item: number) => number) {
+  const result: number[] = [];
+  for (let i = 0; i < array.length; i++) {
+    result.push(transform(array[i]));
+  }
+  return result;
+}
+
+const sqaures__ = mapNums(nums_, (item) => item * item);
+
+// API response
+interface User {
+  name: string;
+  id: number;
+  email: string;
+}
+
+// There is an API that returns users in the system.
+// data: User[]
+interface UserResponse {
+  data?: User[];
+  error?: Error;
+}
+
+interface Student {
+  name: string;
+}
+
+// There is an API that will return students
+interface StudentResponse {
+  data?: Student[];
+  error?: Error;
+}
+
+interface APIResponse<T> {
+  data?: T[];
+  error?: Error;
+}
+
+type APIResponse_<T> = {
+  data?: T[];
+  error?: Error;
+};
+
+const studentResponse: APIResponse<Student> = {
+  data: [{ last: 'last', first: 'f', name: 'n' }],
+};
+//if (studentResponse.data?.[0]) { // type narrowing
+const firstStudent = studentResponse.data?.[0];
+firstStudent?.first;
+//}
+
+type ResponseType = 'success' | 'error';
+
+// Descriminated unions
+type Response<T> =
+  | { type: 'success'; data: T[] }
+  | { type: 'error'; error: Error };
+
+const studentResponse_: Response<Student> = {
+  type: 'success',
+  data: [{ last: 'last', first: 'f', name: 'n' }],
+};
+
+function displayResponse(response: Response<T>) {
+  switch (response.type) {
+    case 'success':
+      console.log(response.data);
+      break;
+    case 'error':
+      console.log(response.error);
+      break;
+  }
+}

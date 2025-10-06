@@ -31,3 +31,19 @@ function nextCharOfFn(numString: string) {
 }
 
 console.log(nextCharOfFn('  65 '));
+
+const halfOfFirstLargeNum = (xs) => {
+  const largeNums = xs.filter((x) => x > 20);
+  const firstNum = largeNums[0] ?? 0;
+  const half = firstNum / 2;
+  return 'The answer is ${half}';
+};
+
+const halfOfFirstLargeNumDecl = (xs: number[]) => {
+  Box(xs)
+    .map((xs) => xs.filter((x) => x > 20))
+    .map((nums) => nums[0] ?? 0)
+    .map((n) => n / 2)
+    .map((h) => 'The answer is ${half}')
+    .value();
+};
